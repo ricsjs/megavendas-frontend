@@ -8,15 +8,9 @@ interface SignInCredentials {
   password: string;
 }
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-};
-
 type AuthContextData = {
   signIn(credentials: SignInCredentials): Promise<void>;
-  user: User | null;
+  user: string;
   isAuthenticated: boolean;
   signOut: () => void;
 }
@@ -28,7 +22,7 @@ type AuthProviderProps = {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState("");
   const isAuthenticated = !!user;
   const router = useRouter();
 
@@ -40,7 +34,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
       router.push("/dashboard");
     } else {
-      setUser(null);
+      setUser("");
     }
   }, [router]);
 
@@ -65,7 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       router.push("/dashboard");
     } catch (err) {
-      setUser(null);
+      setUser("");
       console.error(err);
     }
   }
@@ -73,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   function signOut() {
     destroyCookie(undefined, "megaAuth.token");
     localStorage.removeItem("@megavendas-user");
-    setUser(null);
+    setUser("");
     router.push("/");
   }
 

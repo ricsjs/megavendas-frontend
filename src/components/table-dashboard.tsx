@@ -61,16 +61,14 @@ const TableDashboard: React.FC = () => {
       <table className="w-full min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID do Grupo</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome do Grupo</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contatos</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {groupData?.map((group, groupIndex) => (
-            <tr key={groupIndex}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{group.id}</td>
+          {groupData?.map((group) => (
+            <tr key={group.id}>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{group.name}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {group.contacts.map((contact, contactIndex) => (

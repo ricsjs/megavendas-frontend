@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Modal,
   Button,
@@ -11,37 +11,63 @@ import {
 import { IoMdClose } from "react-icons/io";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Papa from "papaparse";
+import { createGroup } from "@/pages/dashboard/api";
+import { CreateGroupRequest } from "@/pages/dashboard/types";
+import { AuthContext } from "@/contexts/AuthContext";
 
 interface Group {
-  nome: string;
+  userId: string;
+  name: string;
   contatos: FileList | null;
 }
 
 export default function TableHeader() {
   const [modalState, setModalState] = useState(false);
   const { register, handleSubmit, reset } = useForm<Group>();
+  const { user } = useContext(AuthContext);
 
   const openModal = () => {
     setModalState(true);
   };
 
-  const onSubmit: SubmitHandler<Group> = (data) => {
+  const onSubmit: SubmitHandler<Group> = async (data) => {
     if (data.contatos && data.contatos[0]) {
       const file = data.contatos[0];
       Papa.parse(file, {
-        complete: (result: any) => {
+        complete: async (result: any) => {
           const parsedData = result.data as [string, string][];
-          const formattedData = parsedData.map(([nome, telefone]) => ({ nome, telefone }));
-          console.log(data);
+          const formattedData = parsedData.map(([nome, telefone]) => ({
+            name: nome,
+            phone_number: telefone,
+          }));
+
           console.log("Dados do CSV:", formattedData);
+
+          const requestData: CreateGroupRequest = {
+            userId: user,
+            name: data.name,
+            contacts: formattedData.map(contact => ({
+              name: contact.name,
+              phone_number: contact.phone_number,
+            })),
+          };
+
+          try {
+            await createGroup(requestData);
+            console.log("Grupo cadastrado com sucesso!");
+            window.location.reload();
+          } catch (error) {
+            console.error("Erro ao cadastrar grupo:", error);
+          } finally {
+            setModalState(false);
+            reset();
+          }
         },
         header: false,
         skipEmptyLines: true,
         delimiter: ",",
       });
     }
-    setModalState(false);
-    reset();
   };
 
   return (
@@ -72,7 +98,7 @@ export default function TableHeader() {
                   inputClassName="border-2"
                   size="lg"
                   className="col-span-2 mb-10"
-                  {...register("nome", { required: true })}
+                  {...register("name", { required: true })}
                 />
 
                 <FileInput
