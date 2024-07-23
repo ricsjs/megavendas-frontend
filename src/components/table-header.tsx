@@ -41,8 +41,6 @@ export default function TableHeader() {
             phone_number: telefone,
           }));
 
-          console.log("Dados do CSV:", formattedData);
-
           const requestData: CreateGroupRequest = {
             userId: user,
             name: data.name,

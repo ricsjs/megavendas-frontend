@@ -23,7 +23,6 @@ const TableDashboard: React.FC = () => {
       try {
         if (user) {
           const response = await fetchGroupsData(user);
-          console.log(response)
           if (response.length === 0) {
             console.log("Não foram encontrados registros");
           }

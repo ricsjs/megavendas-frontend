@@ -2,7 +2,7 @@ import { Button, Input, Password, Title } from "rizzui";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import { useContext } from "react";
-import { AuthContext } from '@/contexts/AuthContext'; // Certifique-se de que o caminho está correto
+import { AuthContext } from '@/contexts/AuthContext';
 
 interface User {
   email: string;
@@ -16,11 +16,9 @@ export default function Login() {
   const onSubmit: SubmitHandler<User> = async (data) => {
     try {
       await signIn(data);
-      // Redirecionar após login bem-sucedido
       window.location.href = '/dashboard';
     } catch (error) {
       console.error("Falha no login:", error);
-      // Tratar erro, como mostrar uma mensagem para o usuário
     }
   };
 
