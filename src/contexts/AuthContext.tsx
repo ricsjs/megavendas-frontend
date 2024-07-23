@@ -35,8 +35,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const loggedInUser = localStorage.getItem("@megavendas-user");
     if (loggedInUser) {
-      const { user: storedUser, token } = JSON.parse(loggedInUser);
-      setUser(storedUser);
+      const { userId, token } = JSON.parse(loggedInUser);
+      setUser(userId);
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
       router.push("/dashboard");
     } else {
@@ -51,16 +51,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password,
       });
 
-      const { token, user: userData } = response.data;
+      const { token, userId } = response.data;
+      console.log(userId)
 
-      localStorage.setItem("@megavendas-user", JSON.stringify({ user: userData, token }));
+      localStorage.setItem("@megavendas-user", JSON.stringify({ userId, token }));
       setCookie(undefined, "megaAuth.token", token, {
         maxAge: 60 * 60 * 24 * 30,
         path: "/",
       });
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
-      setUser(userData);
+      setUser(userId);
 
       router.push("/dashboard");
     } catch (err) {
