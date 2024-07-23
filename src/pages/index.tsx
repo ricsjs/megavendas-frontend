@@ -15,7 +15,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center flex-col h-screen border border-gray-400">
+    <div className="flex items-center justify-center flex-col h-screen">
       <div className="border border-gray-400 rounded-2xl p-8">
         <Title as="h1">Faça login para continuar</Title>
         <form onSubmit={handleSubmit(onSubmit)}>
